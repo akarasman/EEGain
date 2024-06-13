@@ -61,9 +61,12 @@ class ShallowConvNet(nn.Module):
         self.lastLayer = nn.Linear(self.fSize[-1], num_classes)
 
     def forward(self, x):
+        print(x.shape)
         x = self.firstLayer(x)
+        print(x.shape)
         x = torch.log(self.avgpool(x.pow(2)))
         x = self.dp(x)
+        print(x.shape)
         x = x.view(x.size()[0], -1)
         x = self.lastLayer(x)
 

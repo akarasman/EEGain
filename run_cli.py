@@ -10,7 +10,7 @@ import config
 import click
 import eegain
 from eegain.data import EEGDataloader
-from eegain.data.datasets import DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER, Seed
+from eegain.data.datasets import DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER, Seed, Dummy
 from eegain.logger import EmotionLogger
 from eegain.models import DeepConvNet, EEGNet, ShallowConvNet, TSception
 from collections import defaultdict
@@ -92,9 +92,13 @@ Seed_transform =  [
         eegain.transforms.Resample(s_rate=128),
     ]
 
+Dummy_transform = [
+        # Dummy transform
+    ]
+
 def generate_options():
     def decorator(func):
-        config_instances = [TransformConfig, MAHNOBConfig, TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig, ShallowConvNetConfig]
+        config_instances = [DummyConfig, TransformConfig, MAHNOBConfig, TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig, ShallowConvNetConfig]
         for config_instance in config_instances:
             for field, value in asdict(config_instance()).items():
                 option = click.option(f"--{field}", default=value, required=False, type=type(value))

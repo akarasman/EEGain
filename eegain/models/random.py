@@ -33,4 +33,5 @@ class RandomModel:
 
     def __call__(self, x):
         class_list = list(range(self.num_classes))
-        return torch.tensor(np.random.choice(class_list, size=x.shape[0], p=self.weights))
+        print( 'out', torch.tensor(np.random.choice(class_list, size=x.shape[0], p=[ 1/len(class_list)] * len(class_list))))
+        return torch.tensor(np.random.choice(class_list, size=x.shape[0], p=[ 1/len(class_list)] * len(class_list)))

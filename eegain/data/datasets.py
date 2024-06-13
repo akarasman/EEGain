@@ -1074,3 +1074,91 @@ class Seed(EEGDataset):
         }
 
         return data_array, label_array
+
+class Dummy(EEGDataset):
+    def __init__(self, root: str, label_type: str, transform=None, 
+                 num_subjects: int = 10, num_trials: int = 10, num_channels: int = 32, data_length: int = 1024, **kwargs):
+        self.num_subjects = num_subjects
+        self.root = root
+        self.label_type = label_type
+        self.num_trials = num_trials
+        self.num_channels = num_channels
+        self.data_length = data_length
+        self.transform = None
+        self.unique_identifier = "<EOF>"
+        self.subject_ids = list(range(1, num_subjects + 1))
+        self.mapping_list = self._create_user_recording_mapping()
+        self.read_files = self._generate_random_data()
+        self._sampling_rate = 1000
+
+    def _create_user_recording_mapping(self) -> Dict[int, List[str]]:
+        user_session_info: Dict[int, List[str]] = defaultdict(list)
+        for subject_id in self.subject_ids:
+            for trial in range(self.num_trials):
+                trial_name = f"{trial}{self.unique_identifier}subject_{subject_id}_session.mat"
+                user_session_info[subject_id].append(trial_name)
+        return user_session_info
+
+    def _generate_random_data(self) -> Dict[str, np.ndarray]:
+        read_data = {}
+        for subject in self.subject_ids:
+            for trial in range(self.num_trials):
+                trial_name = f"{trial}{self.unique_identifier}subject_{subject}_session.mat"
+                eeg_data = np.random.rand(self.num_channels, self.data_length)
+                read_data[trial_name] = eeg_data
+        return read_data
+
+    def __get_subject_ids__(self) -> List[int]:
+        return self.subject_ids
+
+    def __get_subject__(self, subject_index: int) -> Tuple[Dict[str, np.ndarray], Dict[str, int]]:
+        if subject_index not in self.mapping_list:
+            raise ValueError(f"Subject {subject_index} not found.")
+        
+        sessions = self.mapping_list[subject_index]
+        data_array, label_array = {}, {}
+        
+        channels = [f"Ch_{i}" for i in range(self.num_channels)]
+
+        for session in sessions:
+            session_name = "".join(session.split(self.unique_identifier)[1])
+            trial_id = int("".join(session.split(self.unique_identifier)[0][:len(self.unique_identifier)]))
+            eeg_data = self.read_files[session]
+            
+            info = mne.create_info(ch_names=channels, sfreq=self._sampling_rate, ch_types="eeg")
+            raw_data = mne.io.RawArray(eeg_data, info, verbose=False)
+
+            if self.transform:
+                raw_data = self.transform(raw_data)
+
+            session_trial = session + "/" + str(trial_id)
+            data_array[session_trial] = raw_data.get_data()
+            label_array[session_trial] = np.random.randint(0, 2)  # Random label n 0 and 1
+
+        data_array = {key: np.expand_dims(value, axis=-3) for key, value in data_array.items()}
+
+        return data_array, label_array
+
+    def __get_trials__(self, sessions, subject_ids):
+        data_array, label_array = {}, {}
+        
+        channels = [f"Ch_{i}" for i in range(self.num_channels)]
+
+        for session in sessions:
+            session_name = "".join(session.split(self.unique_identifier)[1])
+            trial_id = int("".join(session.split(self.unique_identifier)[0][:len(self.unique_identifier)]))
+            eeg_data = self.read_files[session]
+            
+            info = mne.create_info(ch_names=channels, sfreq=self._sampling_rate, ch_types="eeg")
+            raw_data = mne.io.RawArray(eeg_data, info, verbose=False)
+
+            if self.transform:
+                raw_data = self.transform(raw_data)
+
+            session_trial = session_name + "/" + str(trial_id)
+            data_array[session_trial] = raw_data.get_data()
+            label_array[session_trial] = np.random.randint(0, 2)  # Random label between 0 and 1
+            data_array[session_trial] += 1.5*label_array[session_trial]
+        data_array = {key: np.expand_dims(value, axis=-3) for key, value in data_array.items()}
+
+        return data_array, label_array

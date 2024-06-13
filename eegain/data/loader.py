@@ -20,6 +20,7 @@ class EEGDataloader:
         self.batch_size = batch_size
 
     def loto(self, subject_id, session_ids, n_fold):
+        print('LOADER', session_ids, n_fold)
         fold_size = len(session_ids) // n_fold
 
         folds = [session_ids[i:i + fold_size] for i in range(0, len(session_ids), fold_size)]
