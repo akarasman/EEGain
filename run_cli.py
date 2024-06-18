@@ -11,7 +11,7 @@ import click
 import eegain
 from eegain.data import EEGDataloader
 from eegain.data.datasets import DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER, Seed, Dummy
-from eegain.data.datasets_features import DREAMER_feat
+from eegain.data.datasets_features import DREAMER_feat, DEAP_feat
 from eegain.logger import EmotionLogger
 from eegain.models import DeepConvNet, EEGNet, ShallowConvNet, TSception
 from eegain.models.mlp import MLP
@@ -102,9 +102,15 @@ DREAMER_feat_transform = [
     
 ]
 
+DEAP_feat_transform = [
+    
+]
+
 def generate_options():
     def decorator(func):
-        config_instances = [ DREAMER_featConfig, DummyConfig, TransformConfig, MAHNOBConfig, TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig, ShallowConvNetConfig, MLPConfig ]
+        config_instances = [ DREAMER_featConfig, DEAP_featConfig, DummyConfig, TransformConfig, MAHNOBConfig,
+                             TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig,
+                             ShallowConvNetConfig, MLPConfig ]
         for config_instance in config_instances:
             for field, value in asdict(config_instance()).items():
                 option = click.option(f"--{field}", default=value, required=False, type=type(value))

@@ -22,16 +22,18 @@ from .datasets import EEGDataset
 
 logger = logging.getLogger("Dataset_features")
 
-class DREAMER_feat(EEGDataset):
+class BaseFeatDataset(EEGDataset):
+
     def __init__(self, root: str, label_type: str, ground_truth_threshold : float, transform=None, **kwargs):
         self.root = root
-        data = read_mat(f'{root}/feat_array_all_DREAMER.mat')['feat_array_all_DREAMER'][1::2,:]
-        colnames = read_mat(f'{root}/colnames_DREAMER.mat')['colnames']
+        matrix_filename = f'Afeat_matrix_all_{self.unique_identifier}'
+        data = list(read_mat(f'{root}/{matrix_filename}.mat').values())[3][1::2,:]
+        col_filename = f'colnames_{self.unique_identifier}'
+        colnames = list(read_mat(f'{root}/{col_filename}.mat').values())[3]
         self.df = pd.DataFrame(data, columns=colnames,)
         self.label_type = label_type
         self.ground_truth_threshold = ground_truth_threshold
         self.transform = None
-        self.unique_identifier = 'DREAMER' 
         self.subject_ids = self.df['subj'].unique().astype(int)
         self.trials = self.df['task'].unique().astype(int)
         self.mapping_list = self._create_user_recording_mapping()
@@ -69,8 +71,6 @@ class DREAMER_feat(EEGDataset):
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
             data_array[f'{int(subject_index)}/{int(trial)}'] = row.values[:,2:-2]
         
-        # data_array = { key: value
-        #                for key, value in data_array.items() }
         return data_array, label_array
 
     def __get_trials__(self, sessions, subject_ids):
@@ -87,8 +87,18 @@ class DREAMER_feat(EEGDataset):
             label = int(row[label_type] <= self.ground_truth_threshold)
             
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
-            data_array[f'{int(subject_index)}/{int(trial)}'] = row.values[:,2:-2]
+            data_array[f'{int(subject_index)}/{int(trial)}'] = torch.tensor(row.values[:,2:-2]).double()
         
-        # data_array = { key: value
-        #                for key, value in data_array.items() }
         return data_array, label_array
+
+class DREAMER_feat(BaseFeatDataset):
+    
+    def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
+        self.unique_identifier = 'DREAMER'
+        super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
+
+class DEAP_feat(BaseFeatDataset):
+    
+    def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
+        self.unique_identifier = 'DEAP'
+        super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)

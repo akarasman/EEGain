@@ -10,18 +10,18 @@ class MLP(nn.Module):
         super(MLP, self).__init__()
         layers = []
         
-        layers.append(nn.Linear(input_size, hidden_layers[0]))
+        layers.append(nn.Linear(input_size, hidden_layers[0]).double())
         layers.append(nn.ReLU())
         if dropout_rate > 0:
             layers.append(nn.Dropout(dropout_rate))
         
         for i in range(1, len(hidden_layers)):
-            layers.append(nn.Linear(hidden_layers[i-1], hidden_layers[i]))
+            layers.append(nn.Linear(hidden_layers[i-1], hidden_layers[i]).double())
             layers.append(nn.ReLU())
             if dropout_rate > 0:
                 layers.append(nn.Dropout(dropout_rate))
         
-        layers.append(nn.Linear(hidden_layers[-1], num_classes))
+        layers.append(nn.Linear(hidden_layers[-1], num_classes).double())
         self.network = nn.Sequential(*layers)
     
     def forward(self, x):

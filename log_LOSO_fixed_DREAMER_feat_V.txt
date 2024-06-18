@@ -1,0 +1,34 @@
+====================================================================================================
+log_dir=logs/
+overal_log_file=log_LOSO_fixed_DREAMER_feat_V.txt log_dir=logs/
+accuracy=0.8574879227053139
+accuracy_std=0.08795720510160929
+f1=0.9207399254486953
+f1_std=0.05363242852014998
+f1_weighted=0.802240049617535
+f1_weighted_std=0.10961755759910588
+recall=0.9873068960025482
+recall_std=0.02772156775973573
+precision=0.8647342995169081
+precision_std=0.07660890046638577
+kappa=-0.017067465181387305
+kappa_std=0.03724618492719191
+matthews_corrcoef=-0.0234319301051241
+matthews_corrcoef_std=0.05158025588525231
+====================================================================================================
+log_dir=logs/
+overal_log_file=log_LOSO_fixed_DREAMER_feat_V.txt log_dir=logs/
+accuracy=0.8599033816425121
+accuracy_std=0.08332458121091951
+f1=0.9224229549017108
+f1_std=0.05032232731772943
+f1_weighted=0.8034555708891574
+f1_weighted_std=0.10725127703182087
+recall=0.9906513776078993
+recall_std=0.02418544297137055
+precision=0.8654447286160839
+precision_std=0.07519522025475663
+kappa=-0.012630907949799023
+kappa_std=0.03265466126177868
+matthews_corrcoef=-0.016892181870382942
+matthews_corrcoef_std=0.04405180219809434
