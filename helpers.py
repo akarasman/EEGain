@@ -171,7 +171,6 @@ def main_loto(dataset, model, empty_model, classes, **kwargs):
 
     for subject_id, session_ids in subject_video_mapping.items():
         n_fold=len(session_ids)
-        n_fold=10
         eegloader = EEGDataloader(dataset, batch_size=32).loto(subject_id, session_ids,
                                                                n_fold=n_fold)  # pass n_fold=len(session_ids) for LOTO
         num_epoch = kwargs["num_epochs"]

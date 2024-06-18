@@ -1,7 +1,7 @@
 import os
 import copy
 
-os.environ["LOG_LEVEL"] = "DEBUG"
+# os.environ["LOG_LEVEL"] = "DEBUG"
 
 import torch
 from torch import nn
@@ -11,8 +11,10 @@ import click
 import eegain
 from eegain.data import EEGDataloader
 from eegain.data.datasets import DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER, Seed, Dummy
+from eegain.data.datasets_features import DREAMER_feat
 from eegain.logger import EmotionLogger
 from eegain.models import DeepConvNet, EEGNet, ShallowConvNet, TSception
+from eegain.models.mlp import MLP
 from collections import defaultdict
 from dataclasses import asdict
 
@@ -96,9 +98,13 @@ Dummy_transform = [
         # Dummy transform
     ]
 
+DREAMER_feat_transform = [
+    
+]
+
 def generate_options():
     def decorator(func):
-        config_instances = [DummyConfig, TransformConfig, MAHNOBConfig, TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig, ShallowConvNetConfig]
+        config_instances = [ DREAMER_featConfig, DummyConfig, TransformConfig, MAHNOBConfig, TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig, ShallowConvNetConfig, MLPConfig ]
         for config_instance in config_instances:
             for field, value in asdict(config_instance()).items():
                 option = click.option(f"--{field}", default=value, required=False, type=type(value))
@@ -123,7 +129,11 @@ def main(**kwargs):
         model = None
         empty_model = None
     # -------------- Model --------------
+    elif kwargs["model_name"] == 'MLP':
+        model = MLP(**kwargs)
+        empty_model = copy.deepcopy(model)
     else:
+        
         model = globals()[kwargs['model_name']](input_size=[1, kwargs["channels"], kwargs["window"]*kwargs["s_rate"]], **kwargs)
         empty_model = copy.deepcopy(model)
     if kwargs["split_type"] == "LOSO":

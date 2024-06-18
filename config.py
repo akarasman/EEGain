@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import List
 
 
 @dataclass
@@ -68,6 +69,15 @@ class DummyConfig:
     class_names: list[str] = field(default_factory=lambda: ["low", "high"])
     ground_truth_threshold: float = 4.5  # inclusive
     n_classes: int = 4
+    
+@dataclass
+class DREAMER_featConfig:
+    data_path: str = "C:\\Users\\apost\\Documents\\GitHub\\EEGain\\eegain\\data\\features_matrices\\DREAMER"
+    label_type: str = "V"
+    split_type: str = "LOSO"
+    class_names: list[str] = field(default_factory=lambda: ["low", "high"])
+    ground_truth_threshold: float = 4.5  # inclusive
+    n_classes: int = 4
 
 @dataclass
 class TrainingConfig:
@@ -107,3 +117,11 @@ class ShallowConvNetConfig:
     channels: int = 32
     num_classes: int = 2
     dropout_rate: int = 0.5   
+    
+
+@dataclass
+class MLPConfig:
+    input_size: int = 20
+    hidden_layers: List[int] = (128, 128)
+    num_classes: int = 2 
+    dropout_prob: float = 0.2

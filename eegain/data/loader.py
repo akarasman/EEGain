@@ -1,6 +1,7 @@
 import logging
 from itertools import combinations
 from typing import Any, Dict, List, Tuple
+from sklearn.preprocessing import StandardScaler
 
 import numpy as np
 import torch
@@ -20,10 +21,10 @@ class EEGDataloader:
         self.batch_size = batch_size
 
     def loto(self, subject_id, session_ids, n_fold):
-        print('LOADER', session_ids, n_fold)
+        
         fold_size = len(session_ids) // n_fold
 
-        folds = [session_ids[i:i + fold_size] for i in range(0, len(session_ids), fold_size)]
+        folds = [ session_ids[i:i + fold_size] for i in range(0, len(session_ids), fold_size) ]
         for test_sessions in folds:
             logger.debug(f"subject_id is: {subject_id}, test sessions are: {test_sessions}")
             train_sessions = session_ids.copy()
@@ -62,7 +63,10 @@ class EEGDataloader:
         """
         
         if loader_type == "LOTO":
-            x = np.concatenate([v for v in data[0].values()], axis=0)
+            if len(data[0].values()) >= 1:
+                x = np.concatenate([v for v in data[0].values()], axis=0)
+            else :
+                x = list(data[0].values())[0]
         else:
             x = np.concatenate([v for d in data for v in d[0].values()], axis=0)
         x = torch.from_numpy(x).float()
@@ -80,8 +84,7 @@ class EEGDataloader:
                 for k, v in i[1].items():
                     y.extend(list(np.repeat(v, i[0][k].shape[0])))
             y = torch.tensor(y)
-
-
+        
         return x, y
 
     def _get_dataloader(
@@ -120,10 +123,21 @@ class EEGDataloader:
         Returns:
             normalized training and testing data
         """
+        
+        if len(train_data.shape) == 2:
+            scaler = StandardScaler()
+    
+            # Fit the scaler on the train_data and transform both train_data and test_data
+            train_data = scaler.fit_transform(train_data).astype(float)
+            test_data = scaler.transform(test_data).astype(float)
+            
+            return train_data, test_data
+            
         # data: sample x 1 x channel x data
         if len(train_data.shape) != 4:
           train_data = train_data.unsqueeze(1)
           test_data = test_data.unsqueeze(1)
+          
         for channel in range(train_data.shape[2]):
             #this is for important for amigos and maybe dreame
             #TODO: why do they have nan values???

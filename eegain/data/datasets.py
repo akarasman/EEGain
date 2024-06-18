@@ -78,7 +78,6 @@ class SeedIV(EEGDataset):
                     mat_file_name[: mat_file_name.index("_")]
                 )
                 subject_file_name = str(path) + "/" + mat_file_name
-                print(subject_file_name)
                  # file name starts with user_id
                 # user_session_info[subject_id].append(
                 #     str(session) + "/" + subject_file_name
@@ -1136,7 +1135,7 @@ class Dummy(EEGDataset):
             label_array[session_trial] = np.random.randint(0, 2)  # Random label n 0 and 1
 
         data_array = {key: np.expand_dims(value, axis=-3) for key, value in data_array.items()}
-
+        
         return data_array, label_array
 
     def __get_trials__(self, sessions, subject_ids):
