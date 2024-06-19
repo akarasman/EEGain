@@ -1,0 +1,17 @@
+====================================================================================================
+log_dir=logs/
+overal_log_file=log_LOTO_DREAMER_feat_V_dropout0.1_layers3_hidden128.txt log_dir=logs/
+accuracy=0.9142512077294687
+accuracy_std=0.059584040500212605
+f1=0.9541551636602371
+f1_std=0.033753236212163695
+f1_weighted=0.8919125679166219
+f1_weighted_std=0.06397091021091343
+recall=0.9784408727152724
+recall_std=0.032821234785439544
+precision=0.9314458754516298
+precision_std=0.03928157038082387
+kappa=-0.026315912433259904
+kappa_std=0.0381309632452379
+matthews_corrcoef=-0.028245620407480538
+matthews_corrcoef_std=0.04010437587656226

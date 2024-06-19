@@ -28,8 +28,6 @@ class BaseFeatDataset(EEGDataset):
         self.root = root
         matrix_filename = f'Afeat_matrix_all_{self.unique_identifier}'
         data = list(read_mat(f'{root}/{matrix_filename}.mat').values())[3]
-        if self.unique_identifier == 'DREAMER':
-            data = data[1::2]
         col_filename = f'colnames_{self.unique_identifier}'
         colnames = list(read_mat(f'{root}/{col_filename}.mat').values())[3]
         self.df = pd.DataFrame(data, columns=colnames,)
