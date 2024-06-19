@@ -1,11 +1,11 @@
 # !python run_client.py --model_name="TSception"
 ## example model names : EEGNet, TSception, DeepConvNet, ShallowConvNet, RANDOM
-## example data names: DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER
-## set channel and n_chan to 14 for amigos and dreamer and 32 for mahnob and deap, seedIV - 62 
+## example data names: DEAP, MAHNOB, SEED_IV, AMIGOS, DREAMER
+## set channel and n_chan to 14 for amigos and dreamer and 32 for mahnob and deap, SEED_IV - 62 
 python run_cli.py \
---model_name=ShallowConvNet \
---data_name=MAHNOB \
---data_path='path_to_data' \
+--model_name=MLP \
+--data_name=SEED_IV_feat \
+--data_path='/home/akarasmanoglou/Documents/Github/EEGain/book/datasets/features_matrices/SEED IV' \
 --split_type="LOTO" \
 --num_classes=3 \
 --sampling_r=128 \
@@ -19,4 +19,5 @@ python run_cli.py \
 --dropout_rate=0.5 \
 --channels=32 \
 --log_dir="logs/" \
+--input_size=691 \
 --overal_log_file="log_file_name.txt" \

@@ -76,7 +76,6 @@ def train_one_epoch(model, loader, optimizer, loss_fn):
         x_batch = x_batch.to(device)
         y_batch = y_batch.to(device)
         out = model(x_batch)
-        print(out.data.shape, y_batch.data.shape)
         loss = loss_fn(out, y_batch)
         _, pred = torch.max(out, 1)
         optimizer.zero_grad()

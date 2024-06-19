@@ -11,7 +11,7 @@ import click
 import eegain
 from eegain.data import EEGDataloader
 from eegain.data.datasets import DEAP, MAHNOB, SeedIV, AMIGOS, DREAMER, Seed, Dummy
-from eegain.data.datasets_features import DREAMER_feat, DEAP_feat, SEED_feat
+from eegain.data.datasets_features import DREAMER_feat, DEAP_feat, SEED_feat, SEED_IV_feat
 from eegain.logger import EmotionLogger
 from eegain.models import DeepConvNet, EEGNet, ShallowConvNet, TSception
 from eegain.models.mlp import MLP
@@ -110,9 +110,13 @@ SEED_feat_transform = [
     
 ]
 
+SEED_IV_feat_transform = [
+    
+]
+
 def generate_options():
     def decorator(func):
-        config_instances = [ DREAMER_featConfig, DEAP_featConfig, SEED_featConfig, 
+        config_instances = [ DREAMER_featConfig, DEAP_featConfig, SEED_featConfig, SEED_IV_featConfig, 
                              DummyConfig, TransformConfig, MAHNOBConfig,
                              TrainingConfig, EEGNetConfig, TSceptionConfig, DeepConvNetConfig,
                              ShallowConvNetConfig, MLPConfig,  ]

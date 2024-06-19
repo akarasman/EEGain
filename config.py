@@ -22,7 +22,7 @@ class DEAPConfig:
     label_type: str = "V"
     split_type: str = "LOSO"
     class_names: list[str] = field(default_factory=lambda: ["low", "high"])
-    ground_truth_threshold: float = 4.5  # inclusive
+    ground_truth_threshold: float = 8 # inclusive
     n_classes: int = 2
     
 @dataclass
@@ -44,7 +44,7 @@ class DREAMERConfig:
     n_classes: int = 2
     
 @dataclass
-class SeedIVConfig:
+class SEED_IVConfig:
     data_path: str = ""
     label_type: str = "V"
     split_type: str = "LOSO"
@@ -107,6 +107,15 @@ class SEED_featConfig:
     n_classes: int = 3
 
 @dataclass
+class SEED_IV_featConfig:
+    data_path: str = ""
+    label_type: str = "V"
+    split_type: str = "LOSO"
+    class_names: list[str] = field(default_factory=lambda: ["low", "high"])
+    ground_truth_threshold: float = 4.5  # inclusive
+    n_classes: int = 3
+
+@dataclass
 class TrainingConfig:
     batch_size: int = 32
     lr: float = 1e-4
@@ -149,6 +158,7 @@ class ShallowConvNetConfig:
 @dataclass
 class MLPConfig:
     input_size: int = 20
-    hidden_layers: List[int] = (128, 128, 128)
+    num_layers: int = 3
+    hidden_size: int = 256
     num_classes: int = 2 
     dropout_prob: float = 0.1

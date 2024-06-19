@@ -27,7 +27,9 @@ class BaseFeatDataset(EEGDataset):
     def __init__(self, root: str, label_type: str, ground_truth_threshold : float, transform=None, **kwargs):
         self.root = root
         matrix_filename = f'Afeat_matrix_all_{self.unique_identifier}'
-        data = list(read_mat(f'{root}/{matrix_filename}.mat').values())[3][1::2,:]
+        data = list(read_mat(f'{root}/{matrix_filename}.mat').values())[3]
+        if self.unique_identifier == 'DREAMER':
+            data = data[1::2]
         col_filename = f'colnames_{self.unique_identifier}'
         colnames = list(read_mat(f'{root}/{col_filename}.mat').values())[3]
         self.df = pd.DataFrame(data, columns=colnames,)
@@ -66,10 +68,10 @@ class BaseFeatDataset(EEGDataset):
             subject_data = self.df[self.df['subj'] == subject_index]
             row =  subject_data[subject_data['task'] == trial]
             if self.label_discrete:
-                label = row['group']
+                label = int(row['group'])
             else:
                 label_type = 'valence' if self.label_type == 'V' else 'arousal'
-                label = int(row[label_type] <= self.ground_truth_threshold)
+                label = int(row[label_type].values <= self.ground_truth_threshold)
             
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
             data_array[f'{int(subject_index)}/{int(trial)}'] = row.values[:,2:-2]
@@ -87,10 +89,10 @@ class BaseFeatDataset(EEGDataset):
             subject_data = self.df[self.df['subj'] == subject_index]
             row =  subject_data[subject_data['task'] == trial]
             if self.label_discrete:
-                label = row['group']
+                label = int(row['group'])
             else:
                 label_type = 'valence' if self.label_type == 'V' else 'arousal'
-                label = int(row[label_type] <= self.ground_truth_threshold)
+                label = int(row[label_type].values <= self.ground_truth_threshold)
             
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
             data_array[f'{int(subject_index)}/{int(trial)}'] = torch.tensor(row.values[:,2:-2]).double()
@@ -115,6 +117,13 @@ class SEED_feat(BaseFeatDataset):
     
     def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
         self.unique_identifier = 'SEED'
+        self.label_discrete = True
+        super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
+
+class SEED_IV_feat(BaseFeatDataset):
+    
+    def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
+        self.unique_identifier = 'SEED_IV'
         self.label_discrete = True
         super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
 

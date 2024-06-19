@@ -1,0 +1,17 @@
+====================================================================================================
+log_dir=logs/
+overal_log_file=log_LOSO_fixed_DREAMER_feat_A_dropout0.1_layers3_hidden256.txt log_dir=logs/
+accuracy=0.7922705314009661
+accuracy_std=0.14763967912981762
+f1=0.868103582884129
+f1_std=0.1103893061348504
+f1_weighted=0.7909118838151098
+f1_weighted_std=0.14116777872740052
+recall=0.8649398555408786
+recall_std=0.1337472620952495
+precision=0.8753119252160174
+precision_std=0.0892783280911533
+kappa=nan
+kappa_std=nan
+matthews_corrcoef=-0.06392126589832899
+matthews_corrcoef_std=0.11059672744712787
