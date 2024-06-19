@@ -76,6 +76,7 @@ def train_one_epoch(model, loader, optimizer, loss_fn):
         x_batch = x_batch.to(device)
         y_batch = y_batch.to(device)
         out = model(x_batch)
+        print(out.data.shape, y_batch.data.shape)
         loss = loss_fn(out, y_batch)
         _, pred = torch.max(out, 1)
         optimizer.zero_grad()
@@ -84,6 +85,7 @@ def train_one_epoch(model, loader, optimizer, loss_fn):
 
         batch_size = x_batch.size(0)
         dataset_size += batch_size
+        
         all_preds.extend(pred.data.tolist())
         all_actuals.extend(y_batch.data.tolist())
         running_loss += loss.item() * batch_size

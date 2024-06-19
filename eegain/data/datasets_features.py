@@ -65,8 +65,11 @@ class BaseFeatDataset(EEGDataset):
             
             subject_data = self.df[self.df['subj'] == subject_index]
             row =  subject_data[subject_data['task'] == trial]
-            label_type = 'valence' if self.label_type == 'V' else 'arousal'
-            label = int(row[label_type] <= self.ground_truth_threshold)
+            if self.label_discrete:
+                label = row['group']
+            else:
+                label_type = 'valence' if self.label_type == 'V' else 'arousal'
+                label = int(row[label_type] <= self.ground_truth_threshold)
             
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
             data_array[f'{int(subject_index)}/{int(trial)}'] = row.values[:,2:-2]
@@ -83,8 +86,11 @@ class BaseFeatDataset(EEGDataset):
             
             subject_data = self.df[self.df['subj'] == subject_index]
             row =  subject_data[subject_data['task'] == trial]
-            label_type = 'valence' if self.label_type == 'V' else 'arousal'
-            label = int(row[label_type] <= self.ground_truth_threshold)
+            if self.label_discrete:
+                label = row['group']
+            else:
+                label_type = 'valence' if self.label_type == 'V' else 'arousal'
+                label = int(row[label_type] <= self.ground_truth_threshold)
             
             label_array[f'{int(subject_index)}/{int(trial)}'] = label 
             data_array[f'{int(subject_index)}/{int(trial)}'] = torch.tensor(row.values[:,2:-2]).double()
@@ -95,10 +101,20 @@ class DREAMER_feat(BaseFeatDataset):
     
     def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
         self.unique_identifier = 'DREAMER'
+        self.label_discrete = False
         super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
 
 class DEAP_feat(BaseFeatDataset):
     
     def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
         self.unique_identifier = 'DEAP'
+        self.label_discrete = False
         super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
+
+class SEED_feat(BaseFeatDataset):
+    
+    def __init__(self, root: str, label_type: str, ground_truth_threshold: float, transform=None, **kwargs):
+        self.unique_identifier = 'SEED'
+        self.label_discrete = True
+        super().__init__(root, label_type, ground_truth_threshold, transform, **kwargs)
+

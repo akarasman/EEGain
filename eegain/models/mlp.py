@@ -5,9 +5,10 @@ from ._registry import register_model
 
 @register_model
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_layers=[256,256], num_classes=2, dropout_rate=0.2, **kwargs):
+    def __init__(self, input_size, num_classes=2, num_layers=3, hidden_size=512, dropout_rate=0.2, **kwargs):
         
         super(MLP, self).__init__()
+        hidden_layers = [ hidden_size ] * num_layers
         layers = []
         
         layers.append(nn.Linear(input_size, hidden_layers[0]).double())
