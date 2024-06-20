@@ -1,24 +1,24 @@
 #!/bin/bash
 
 # Arrays for the different arguments
-data_names=("DREAMER_feat" "SEED_feat" "SEED_IV_feat" "DEAP_feat" )
-data_paths=("eegain/data/features_matrices/DREAMER" \
+data_names=("SEED_IV_feat" "DREAMER_feat" "SEED_feat" "DEAP_feat" )
+data_paths=("eegain/data/features_matrices/SEED_IV"\
+            "eegain/data/features_matrices/DREAMER" \
             "eegain/data/features_matrices/SEED" \
-            "eegain/data/features_matrices/SEED IV"\
             "eegain/data/features_matrices/DEAP")
 split_types=("LOTO" "LOSO_fixed")
 label_types=("V" "A")
-input_sizes=(129 688 688 263)
-num_classes_set=(2 3 4 2)
+input_sizes=(688 129 688 263)
+num_classes_set=(4 2 3 2)
 
 # Hyperparameter search ranges
 dropout_rate=0.1
 num_layers=3
-hidden_sizes=(128 512 512 256)
+hidden_sizes=(256 128 512 512 )
 
 # Common arguments
-num_epochs=50
-batch_size=16
+num_epochs=20
+batch_size=8
 lr=0.001
 weight_decay=0
 label_smoothing=0.01
